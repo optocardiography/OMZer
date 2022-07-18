@@ -1,0 +1,19 @@
+function output = lowPassFilterSignal(input, Wp, acqFreq)
+
+Ws = Wp + 40; % As a result, the bandwidth during roll-off is 40 Hz
+
+dLowPass = designfilt('lowpassiir', ...
+    'PassbandFrequency',Wp,...
+    'StopbandFrequency',Ws, ...
+    'PassbandRipple',1, ...
+    'StopbandAttenuation',30,...
+    'DesignMethod','butter', ...
+    'SampleRate',acqFreq);
+
+inputTemporary = permute( input, [3,2,1] );
+
+inputTemporary = filtfilt( dLowPass, inputTemporary );
+
+output = permute( inputTemporary, [3,2,1] );
+
+end
